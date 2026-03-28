@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  shape_detection:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: shape_detection:latest
+    runtime: nvidia # nvidia-container-toolkit required
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    volumes:
+      # Mount host HF cache — avoids re-downloading 8GB model every run
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    devices:
+      # Webcam access — adjust index if your camera is /dev/video1 etc.
+      - /dev/video0:/dev/video0
+    stdin_open: true
+    tty: true
